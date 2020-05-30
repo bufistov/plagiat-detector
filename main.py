@@ -38,8 +38,11 @@ def main(args):
                     document[header[idx]] = row[idx]
                 else:
                     document['nom'] = document['nom'] + row[idx]
-            result = client.index(index=index, id=doc_id, body=json.JSONEncoder().encode(document))
-            doc_id = doc_id + 1
+            if len(document[args['column']]) < args['minsize']:
+                LOGGER.warning("Skipping small document: " + document[args['column']])
+            else:
+                client.index(index=index, id=doc_id, body=json.JSONEncoder().encode(document))
+                doc_id = doc_id + 1
     time.sleep(2)
     LOGGER.info("Indexed " + str(doc_id - 1) + " documents")
     docs = getDocuments(client, index)
@@ -75,17 +78,7 @@ def getDocuments(client, index, size=1000):
 
 
 def toVector(minHashBase64, numBits = 4):
-    array = base64.b64decode(minHashBase64)
-    offset = 7
-    result = []
-    for b in array:
-        mask = ((1 << numBits) - 1)
-        val1 = (b & (mask << 4)) >> 4
-        val2 = b & mask
-        result.append(val1)
-        result.append(val2)
-    return result
-
+    return base64.b64decode(minHashBase64)
 
 def getDistance(v1, v2):
     try:
@@ -110,4 +103,6 @@ if __name__ == '__main__':
                         help='ES index name')
     parser.add_argument('--threshold', default='0.95',
                         help='Threshold for documents similarity')
+    parser.add_argument('--minsize', type=int, default=10,
+                        help='Min size of body to index')
     main(vars(parser.parse_args()))

@@ -37,7 +37,7 @@ def main(args):
                 if header[idx] == args['column']:
                     document[header[idx]] = row[idx]
                 else:
-                    document['nom'] = document['nom'] + row[idx]
+                    document['nom'] = document['nom'] + row[idx] + ' '
             if len(document[args['column']]) < args['minsize']:
                 LOGGER.warning("Skipping small document: " + document[args['column']])
             else:
@@ -55,7 +55,7 @@ def main(args):
                 nameKey = "{}->{}".format(keys[0], keys[1])
                 distances[nameKey] = getDistance(docs[i]["value"], docs[j]["value"])
 
-    for k, v in sorted(distances.items(), key=lambda item: item[1]):
+    for k, v in sorted(distances.items(), key=lambda item: item[1], reverse=True):
         print('{}: {}'.format(k, v))
 
 
@@ -79,6 +79,7 @@ def getDocuments(client, index, size=1000):
 
 def toVector(minHashBase64, numBits = 4):
     return base64.b64decode(minHashBase64)
+
 
 def getDistance(v1, v2):
     try:

@@ -1,0 +1,44 @@
+{
+  "mappings": {
+    "dynamic": "strict",
+    "properties": {
+      "nom": {
+        "type": "text"
+      },
+      "Resposta": {
+        "type": "text",
+        "copy_to": "codeMinhash"
+      },
+      "codeMinhash": {
+        "type": "minhash",
+        "minhash_analyzer": "minhash_analyzer",
+        "copy_bits_to": "content_minhash_bits"
+      }
+    }
+  },
+  "settings": {
+    "index": {
+      "number_of_replicas": "0",
+      "number_of_shards": "1",
+      "analysis": {
+        "analyzer": {
+          "minhash_analyzer": {
+            "type": "custom",
+            "tokenizer": "standard",
+            "filter": [
+              "my_filter"
+            ]
+          }
+        },
+        "filter":{
+          "my_filter":{
+            "type":"minhash",
+            "seed":100,
+            "bit":4,
+            "size":256
+          }
+        }
+      }
+    }
+  }
+}

@@ -49,11 +49,9 @@ def main(args):
     LOGGER.info("Found " + str(len(docs)) + " documents")
     distances = {}
     for i in range(len(docs)):
-        for j in range(len(docs)):
-            if j != i:
-                keys = sorted([docs[i]['name'], docs[j]['name']])
-                nameKey = "{}->{}".format(keys[0], keys[1])
-                distances[nameKey] = getDistance(docs[i]["value"], docs[j]["value"])
+        for j in range(i+1, len(docs), 1):
+            nameKey = "{}->{}".format(docs[i]['name'], docs[j]['name'])
+            distances[nameKey] = getDistance(docs[i]["value"], docs[j]["value"])
 
     for k, v in sorted(distances.items(), key=lambda item: item[1], reverse=True):
         print('{}: {}'.format(k, v))

@@ -100,8 +100,6 @@ if __name__ == '__main__':
                         help='Template file for ES index')
     parser.add_argument('--es-index', default='submissions',
                         help='ES index name')
-    parser.add_argument('--threshold', default='0.95',
-                        help='Threshold for documents similarity')
     parser.add_argument('--minsize', type=int, default=10,
                         help='Min size of body to index')
     main(vars(parser.parse_args()))

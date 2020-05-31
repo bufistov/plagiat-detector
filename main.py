@@ -40,7 +40,7 @@ def main(args):
                 else:
                     document['nom'] = document['nom'] + row[idx] + ' '
             if len(document[fieldToCheck]) < args['minsize']:
-                LOGGER.warning("Skipping small document: " + document[args['column']])
+                LOGGER.warning("Skipping small document: " + document[fieldToCheck])
             else:
                 client.index(index=index, id=doc_id, body=json.JSONEncoder().encode(document))
                 doc_id = doc_id + 1

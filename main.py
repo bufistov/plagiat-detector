@@ -4,23 +4,25 @@ import csv
 import json
 import logging
 import math
+import sys
 import time
 
 from elasticsearch import Elasticsearch
 
 LOGGER = logging.getLogger('plagiator')
-console = logging.StreamHandler()
+console = logging.StreamHandler(sys.stdout)
 console.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 console.setFormatter(formatter)
 LOGGER.addHandler(console)
+LOGGER.setLevel(logging.DEBUG)
 
 
 def main(args):
     client = Elasticsearch()
     index = args['es_index']
     if client.indices.exists(index):
-        LOGGER.info("Deleteting index {}...", index)
+        LOGGER.info("Deleteting index {}...".format(index))
         client.indices.delete(index)
         LOGGER.info("Done")
     with open(args['es_template']) as es_template:

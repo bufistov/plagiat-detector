@@ -31,14 +31,15 @@ def main(args):
         reader = csv.reader(csvfile, delimiter=',', quotechar='"')
         header = next(reader)
         doc_id = 1
+        fieldToCheck = 'Resposta'
         for row in reader:
-            document = {'nom': '', args['column']: ''}
+            document = {'nom': '', fieldToCheck: ''}
             for idx in range(len(row)):
                 if header[idx] == args['column']:
-                    document[header[idx]] = row[idx]
+                    document[fieldToCheck] = row[idx]
                 else:
                     document['nom'] = document['nom'] + row[idx] + ' '
-            if len(document[args['column']]) < args['minsize']:
+            if len(document[fieldToCheck]) < args['minsize']:
                 LOGGER.warning("Skipping small document: " + document[args['column']])
             else:
                 client.index(index=index, id=doc_id, body=json.JSONEncoder().encode(document))
@@ -58,12 +59,11 @@ def main(args):
 
 
 def getDocuments(client, index, size=1000):
-    query = '''
-    {
-    "size": 1000,
-    "_source": ["nom"],
-    "stored_fields": ["codeMinhash"],
-    "query": {"match_all": {}}
+    query = '''{
+        "size": 1000,
+        "_source": ["nom"],
+        "stored_fields": ["codeMinhash"],
+        "query": {"match_all": {}}
     }
     '''
     result = client.search(index=index, body=query)

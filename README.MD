@@ -22,6 +22,8 @@ pip install elasticsearch
 ```
 #### List documents sorted by similarity
 
+To specify which column in csv file should be checked for similarity use '--column' option
+which defaults to 'Resposta'
 ```
 python3 main.py respostes.csv
 ```
